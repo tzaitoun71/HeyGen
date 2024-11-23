@@ -5,6 +5,10 @@ client = TranslationClient(base_url="http://127.0.0.1:8000", max_retries=5, back
 try:
     status = client.get_status()
     print(f"Final job status: {status}")
+    
+    cached_status = client.get_cached_status()
+    print(f"Cached job status: {cached_status}")
+    
 except TimeoutError as e:
     print(f"Timeout occurred: {e}")
 except Exception as e:

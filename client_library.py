@@ -10,6 +10,7 @@ class TranslationClient:
         self.max_retries = max_retries
         self.backoff_factor = backoff_factor
         self.timeout = timeout
+        self.last_known_state = None
 
     def get_status(self, endpoint: str = "/status") -> str:
         attempt = 0
@@ -23,6 +24,7 @@ class TranslationClient:
                 logging.info(f"Attempt {attempt + 1}: Received status '{status}'")
 
                 if status in ["completed", "error"]:
+                    self.last_known_state = status
                     return status
                 
                 time.sleep(self.backoff_factor ** attempt)
@@ -34,8 +36,11 @@ class TranslationClient:
                 attempt += 1
 
         raise TimeoutError("Max retries reached without resolving the job status")
-
-
-
-
-        return status
+    
+    def get_cached_status(self) -> str:
+        if self.last_known_state:
+            logging.info(f"Returning cached status: {self.last_known_state}")
+            return self.last_known_state
+        else:
+            logging.warning("No cached status available.")
+            return "unknown"
