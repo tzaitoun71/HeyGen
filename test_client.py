@@ -1,6 +1,6 @@
 from client_library import TranslationClient
 
-client = TranslationClient(base_url="http://127.0.0.1:8000", max_retries=5, backoff_factor=2.0, timeout=10)
+client = TranslationClient(base_url="http://127.0.0.1:8000", max_retries=10, backoff_factor=1.25, timeout=10, debug=False)
 
 try:
     status = client.get_status()

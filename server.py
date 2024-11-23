@@ -8,7 +8,7 @@ app = FastAPI()
 
 CONFIG = {
     "start-time": datetime.now(),
-    "delay-seconds": 20,
+    "delay-seconds": 5,
     "state": "pending"
 }
 
