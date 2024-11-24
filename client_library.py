@@ -12,11 +12,27 @@ class TranslationClient:
         self.timeout = timeout
         self.last_known_state = None
 
+        # Configure logging
         self.logger = logging.getLogger(__name__)
-        if debug:
-            logging.basicConfig(level=logging.INFO)
-        else:
-            logging.basicConfig(level=logging.WARNING)
+        self.logger.setLevel(logging.DEBUG if debug else logging.INFO)
+
+        # Avoid duplicate handlers
+        if not self.logger.handlers:
+            # File handler for logging to a file
+            file_handler = logging.FileHandler("translation_client.log")
+            file_handler.setLevel(logging.DEBUG if debug else logging.INFO)
+            file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+            file_handler.setFormatter(file_formatter)
+
+            # Stream handler for logging to console
+            stream_handler = logging.StreamHandler()
+            stream_handler.setLevel(logging.DEBUG if debug else logging.INFO)
+            stream_formatter = logging.Formatter("%(levelname)s - %(message)s")
+            stream_handler.setFormatter(stream_formatter)
+
+            # Add handlers to logger
+            self.logger.addHandler(file_handler)
+            self.logger.addHandler(stream_handler)
 
     def get_status(self, endpoint: str = "/status") -> str:
         attempt = 0
