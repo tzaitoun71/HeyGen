@@ -9,12 +9,12 @@ This Python client library interacts with a simulated video translation server. 
 1. **Clone the repository**  
    Use the following command to clone the repository:
    ```bash
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/github_username/Translation-Client-Library.git
 
 2. **Navigate to the project folder**
    Change your directory to the cloned repository:
    ```bash
-   cd repo_name
+   cd Translation-Client-Library
 
 3. **Install the required dependencies**
    run the following command to install all dependencies:
