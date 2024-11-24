@@ -39,16 +39,20 @@ class TranslationClient:
 
         while attempt < self.max_retries:
             try:
+                # Send GET request to the server
                 response = requests.get(f"{self.base_url}{endpoint}", timeout=self.timeout)
                 response.raise_for_status()
                 status = response.json().get("result")
 
+                # Log the received status
                 self.logger.info(f"Attempt {attempt + 1}: Received status '{status}'")
 
+                # Return status if it's a final state
                 if status in ["completed", "error"]:
                     self.last_known_state = status
                     return status
 
+                # Apply exponential backoff before the next attempt
                 time.sleep(self.backoff_factor ** attempt)
                 attempt += 1
 
@@ -59,12 +63,16 @@ class TranslationClient:
             except requests.RequestException as e:
                 self.logger.error(f"General error: {e}")
 
+            # Retry after a delay
             time.sleep(self.backoff_factor ** attempt)
             attempt += 1
 
         raise TimeoutError("Max retries reached without resolving the job status")
     
     def get_cached_status(self) -> str:
+
+        # Returns the cached last known status if available
+
         if self.last_known_state:
             logging.info(f"Returning cached status: {self.last_known_state}")
             return self.last_known_state
